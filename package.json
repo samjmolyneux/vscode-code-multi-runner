@@ -38,6 +38,7 @@
   },
   "activationEvents": [
     "onCommand:code-runner.run",
+    "onCommand:code-runner.run2",
     "onCommand:code-runner.runCustomCommand",
     "onCommand:code-runner.runByLanguage",
     "onStartupFinished"
@@ -65,7 +66,7 @@
       },
       {
         "command": "code-runner.run2",
-        "title": "Run Code (Alternative)"
+        "title": "Run Code 2"
       }   
     ],
     "keybindings": [

@@ -295,10 +295,11 @@ export class CodeManager implements vscode.Disposable {
             }
         }
 
+        let executorMap: any;
         if (run === "1") {
-            const executorMap = this._config.get<any>("executorMap");
+            executorMap = this._config.get<any>("executorMap");
         } else {
-            const executorMap = this._config.get<any>("executorMap2");
+            executorMap = this._config.get<any>("executorMap2");
         }
 
         if (executor == null) {
