@@ -58,7 +58,39 @@ export class CodeManager implements vscode.Disposable {
         this.initialize();
 
         const fileExtension = extname(this._document.fileName);
-        const executor = this.getExecutor(languageId, fileExtension);
+        const executor = this.getExecutor(languageId, fileExtension, "1");
+        // undefined or null
+        if (executor == null) {
+            vscode.window.showInformationMessage("Code language not supported or defined.");
+            return;
+        }
+
+        this.getCodeFileAndExecute(fileExtension, executor);
+    }
+
+    public async run2(languageId: string = null, fileUri: vscode.Uri = null) {
+        if (this._isRunning) {
+            vscode.window.showInformationMessage("Code is already running!");
+            return;
+        }
+
+        this._runFromExplorer = this.checkIsRunFromExplorer(fileUri);
+        if (this._runFromExplorer) {
+            this._document = await vscode.workspace.openTextDocument(fileUri);
+        } else {
+            const editor = vscode.window.activeTextEditor;
+            if (editor) {
+                this._document = editor.document;
+            } else {
+                vscode.window.showInformationMessage("No code found or selected.");
+                return;
+            }
+        }
+
+        this.initialize();
+
+        const fileExtension = extname(this._document.fileName);
+        const executor = this.getExecutor(languageId, fileExtension, "2");
         // undefined or null
         if (executor == null) {
             vscode.window.showInformationMessage("Code language not supported or defined.");
@@ -237,7 +269,7 @@ export class CodeManager implements vscode.Disposable {
         fs.writeFileSync(this._codeFile, content);
     }
 
-    private getExecutor(languageId: string, fileExtension: string): string {
+    private getExecutor(languageId: string, fileExtension: string, run: string): string {
         this._languageId = languageId === null ? this._document.languageId : languageId;
 
         let executor = null;
@@ -263,7 +295,11 @@ export class CodeManager implements vscode.Disposable {
             }
         }
 
-        const executorMap = this._config.get<any>("executorMap");
+        if (run === "1") {
+            const executorMap = this._config.get<any>("executorMap");
+        } else {
+            const executorMap = this._config.get<any>("executorMap2");
+        }
 
         if (executor == null) {
             executor = executorMap[this._languageId];

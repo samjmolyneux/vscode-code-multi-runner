@@ -14,6 +14,10 @@ export function activate(context: vscode.ExtensionContext) {
         codeManager.run(null, fileUri);
     });
 
+    const run2 = vscode.commands.registerCommand("code-runner.run2", (fileUri: vscode.Uri) => {
+        codeManager.run2(null, fileUri);
+    });
+
     const runCustomCommand = vscode.commands.registerCommand("code-runner.runCustomCommand", () => {
         codeManager.runCustomCommand();
     });
